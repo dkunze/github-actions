@@ -21,17 +21,23 @@ jobs:
         with:
           push: true
           tags: dkunzevich/github-actions:latest
-
-      - name: deploy to k8s
-        uses: steebchen/kubectl@master
+      
+      - name: deploy to cluster
+        uses: wahyd4/kubectl-helm-action@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
-          args: set image --record deployment/my-app container=dkunzevich/github-actions:latest
-      - name: verify deployment
-        uses: steebchen/kubectl@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-          KUBECTL_VERSION: "1.15"
-        with:
-          args: '"rollout status deployment/my-app"'
+          args: kubectl apply -f manifest.yaml
+#      - name: deploy to k8s
+#        uses: steebchen/kubectl@master
+#        env:
+#          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+#        with:
+#          args: set image --record deployment/my-app container=dkunzevich/github-actions:latest
+#      - name: verify deployment
+#        uses: steebchen/kubectl@master
+#        env:
+#          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+#          KUBECTL_VERSION: "1.15"
+#        with:
+#          args: '"rollout status deployment/my-app"'
