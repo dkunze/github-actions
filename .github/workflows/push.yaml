@@ -20,14 +20,15 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: dkunzevich/github-actions:latest
+          tags: dkunzevich/github-actions:${{ github.sha }}
       
-      - name: deploy to cluster
+      - name: deploy to k8s
         uses: wahyd4/kubectl-helm-action@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
-          args: kubectl apply -f manifest.yaml
+          args: set image --record deployment/my-app github-actions=dkunzevich/github-actions:${{ github.sha }}    
+
 #      - name: deploy to k8s
 #        uses: steebchen/kubectl@master
 #        env:
